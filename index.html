@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Miss Vikelsik's Pins</title>
+  <script async defer src="https://assets.pinterest.com/js/pinit.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fffafc;
+      color: #333;
+      padding: 40px;
+      max-width: 700px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #cc3366;
+    }
+    input, button {
+      padding: 12px;
+      width: 100%;
+      margin-top: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #cc3366;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #a82a54;
+    }
+    .embed-box {
+      margin-top: 30px;
+    }
+    .pin-container {
+      margin-bottom: 25px;
+      border-bottom: 1px dashed #ddd;
+      padding-bottom: 20px;
+    }
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 14px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📌 Miss Vikelsik's Pin Wall</h1>
+  <input type="text" id="pinLink" placeholder="Paste Pinterest Pin Link">
+  <button onclick="embedPin()">Embed This Pin</button>
+
+  <div class="embed-box" id="embedBox"></div>
+
+  <footer>
+    Created with ❤️ for Miss Vikelsik | Hosted on GitHub Pages
+  </footer>
+
+  <script>
+    function embedPin() {
+      const link = document.getElementById('pinLink').value.trim();
+      const embedBox = document.getElementById('embedBox');
+      if (link.includes("pinterest.com/pin/")) {
+        const container = document.createElement('div');
+        container.className = 'pin-container';
+        container.innerHTML = `
+          <a data-pin-do="embedPin" href="${link}"></a>
+        `;
+        embedBox.appendChild(container);
+        window.PinUtils.build(); // Render the pin
+        document.getElementById('pinLink').value = ""; // Clear input
+      } else {
+        alert("Please enter a valid Pinterest pin link (like https://www.pinterest.com/pin/...).");
+      }
+    }
+  </script>
+
+</body>
+</html>
