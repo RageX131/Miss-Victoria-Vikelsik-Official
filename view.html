@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>View Pinterest Pin</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 40px; background: #fff4f4; text-align: center; }
+    #embedHere { margin-top: 30px; }
+    a { text-decoration: none; }
+  </style>
+  <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
+</head>
+<body>
+  <h2>📍 Your Pinterest Pin</h2>
+  <div id="embedHere"></div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const pinUrl = urlParams.get("pin");
+
+    if (pinUrl) {
+      const container = document.getElementById("embedHere");
+      container.innerHTML = `<a data-pin-do="embedPin" href="${pinUrl}"></a>`;
+      window.PinUtils.build();
+    }
+  </script>
+</body>
+</html>
