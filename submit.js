@@ -1,42 +1,65 @@
+const sheetAPI = "https://script.google.com/macros/s/AKfycbxR8e3LRNeh6RciYlwqCfAcK-DFdiMHHknR8kKN7EpTeMvTvOPmTix4Bxyk88WPjcvG/exec";
 
-const form = document.getElementById('pinForm');
-const pinUrl = document.getElementById('pinUrl');
-const pinPreviews = document.getElementById('pinPreviews');
-
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  fetch('https://script.google.com/macros/s/AKfycbxR8e3LRNeh6RciYlwqCfAcK-DFdiMHHknR8kKN7EpTeMvTvOPmTix4Bxyk88WPjcvG/exec', {
-    method: 'POST',
-    body: JSON.stringify({ url: pinUrl.value }),
-    headers: { 'Content-Type': 'application/json' }
-  }).then(() => {
-    pinUrl.value = '';
-    loadPreviews();
-  });
-});
-
-function loadPreviews() {
-  pinPreviews.innerHTML = 'Loading...';
-  fetch('https://script.google.com/macros/s/AKfycbxR8e3LRNeh6RciYlwqCfAcK-DFdiMHHknR8kKN7EpTeMvTvOPmTix4Bxyk88WPjcvG/exec')
-    .then(res => res.json())
-    .then(data => {
-      pinPreviews.innerHTML = '';
-      data.reverse().forEach((pin, i) => {
-        const id = pin.split('/').pop();
-        const card = document.createElement('div');
-        card.className = 'pin-card';
-        card.innerHTML = `
-          <iframe src="https://assets.pinterest.com/ext/embed.html?id=${id}" width="150" height="250" style="border:none;"></iframe>
-          <button onclick="deletePin(${i})">Delete</button>
-        `;
-        pinPreviews.appendChild(card);
-      });
+async function submitPin() {
+  const pinUrl = document.getElementById("pinUrl").value.trim();
+  if (!pinUrl.includes("pinterest.com/pin/")) {
+    document.getElementById("status").innerText = "Invalid Pinterest link.";
+    return;
+  }
+  document.getElementById("status").innerText = "Submitting...";
+  try {
+    const response = await fetch(sheetAPI, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ url: pinUrl }),
     });
+    const result = await response.text();
+    document.getElementById("status").innerText = result;
+    loadPins();
+  } catch (error) {
+    document.getElementById("status").innerText = "Error submitting pin.";
+  }
 }
 
-function deletePin(index) {
-  fetch('https://script.google.com/macros/s/AKfycbxR8e3LRNeh6RciYlwqCfAcK-DFdiMHHknR8kKN7EpTeMvTvOPmTix4Bxyk88WPjcvG/exec?delete=' + index)
-    .then(() => loadPreviews());
+async function loadPins() {
+  const preview = document.getElementById("pin-preview");
+  preview.innerHTML = "Loading...";
+  try {
+    const response = await fetch(sheetAPI);
+    const data = await response.json();
+    preview.innerHTML = "";
+    data.reverse().forEach(pin => {
+      const pinId = pin.url.split("/pin/")[1].split("/")[0];
+      const div = document.createElement("div");
+      div.className = "pin-preview";
+      div.innerHTML = `
+        <iframe src="https://assets.pinterest.com/ext/embed.html?id=${pinId}" frameborder="0"></iframe>
+        <button onclick="deletePin('${pin.url}')">Delete</button>
+      `;
+      preview.appendChild(div);
+    });
+  } catch (error) {
+    preview.innerHTML = "Failed to load pins.";
+  }
 }
 
-loadPreviews();
+async function deletePin(url) {
+  const confirmed = confirm("Are you sure you want to delete this pin?");
+  if (!confirmed) return;
+  try {
+    await fetch(sheetAPI, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ delete: url }),
+    });
+    loadPins();
+  } catch (error) {
+    alert("Failed to delete pin.");
+  }
+}
+
+window.onload = loadPins;

@@ -1,45 +1,66 @@
-
 body {
   font-family: sans-serif;
   margin: 0;
   padding: 0;
-  background: #fff;
-  color: #333;
+  background: #fdfdfd;
 }
 header {
   text-align: center;
-  padding: 20px;
-  background: #f5f5f5;
+  background: #f7f7f7;
+  padding: 10px;
 }
-.header-image {
+header img.banner {
   width: 100%;
   max-height: 200px;
   object-fit: cover;
 }
-form {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 20px;
+main {
+  padding: 20px;
 }
-input[type="url"] {
-  flex: 1;
+.form-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.form-section input {
+  width: 80%;
+  max-width: 400px;
   padding: 10px;
+  margin: 10px 0;
 }
-button {
+.form-section button {
   padding: 10px 20px;
-  cursor: pointer;
 }
-#pinPreviews {
+#pin-preview {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 10px;
-  margin: 20px;
+  justify-content: center;
 }
-.pin-card {
-  border: 1px solid #ccc;
-  padding: 10px;
-  max-width: 200px;
-  text-align: center;
+.pin-preview {
+  border: 1px solid #ddd;
+  padding: 5px;
+  background: white;
+}
+.pin-preview iframe {
+  width: 100px;
+  height: 180px;
+}
+.pin-preview button {
+  display: block;
+  margin-top: 5px;
+  width: 100%;
+  background: #f33;
+  color: white;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+}
+@media (max-width: 600px) {
+  .form-section input {
+    width: 95%;
+  }
+  .pin-preview iframe {
+    width: 80px;
+    height: 150px;
+  }
 }
