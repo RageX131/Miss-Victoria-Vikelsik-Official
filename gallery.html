@@ -1,43 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Miss Vikelsik's Pins</title>
   <meta charset="UTF-8" />
-  <style>
-    body {
-      font-family: Arial;
-      max-width: 900px;
-      margin: 20px auto;
-      text-align: center;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
-    iframe {
-      width: 100%;
-      border: none;
-    }
-  </style>
-  <script async defer src="https://assets.pinterest.com/js/pinit.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Miss Vikelsik Gallery</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>📍 Miss Vikelsik's Pinterest Gallery</h1>
-  <div class="grid" id="pins"></div>
+<body class="bg-gray-50">
+
+  <!-- Header Image -->
+  <header class="w-full">
+    <img src="images/SaveTwitter.Net_GqxYOslW4AA4hhp.jpg" alt="Miss Vikelsik" class="w-full object-cover max-h-80" />
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-6xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6 text-center text-pink-600">Miss Vikelsik's Pinterest Gallery</h1>
+
+    <!-- Gallery Container -->
+    <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Pins will be inserted here -->
+    </div>
+  </main>
 
   <script>
-    fetch("https://script.google.com/macros/s/AKfycbxR8e3LRNeh6RciYlwqCfAcK-DFdiMHHknR8kKN7EpTeMvTvOPmTix4Bxyk88WPjcvG/exec")
+    const gallery = document.getElementById("gallery");
+    const sheetURL = 'https://script.google.com/macros/s/AKfycbxR8e3LRNeh6RciYlwqCfAcK-DFdiMHHknR8kKN7EpTeMvTvOPmTix4Bxyk88WPjcvG/exec';
+
+    fetch(sheetURL)
       .then(res => res.json())
-      .then(links => {
-        const grid = document.getElementById("pins");
-        links.forEach(link => {
-          const div = document.createElement("div");
-          div.innerHTML = `<a data-pin-do="embedPin" href="${link}"></a>`;
-          grid.appendChild(div);
+      .then(data => {
+        data.reverse().forEach((item, index) => {
+          const pinWrapper = document.createElement("div");
+          pinWrapper.className = "relative shadow-md rounded-lg overflow-hidden bg-white";
+
+          pinWrapper.innerHTML = `
+            <iframe src="https://www.pinterest.com/pin/${extractPinId(item.link)}/embed" 
+                    height="400" width="100%" frameborder="0" scrolling="no" 
+                    style="border:none;" class="w-full"></iframe>
+
+            <button onclick="deletePin('${item.link}')" 
+                    class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white px-3 py-1 text-xs rounded shadow">
+              Delete
+            </button>
+          `;
+
+          gallery.appendChild(pinWrapper);
         });
-        if (window.PinUtils) PinUtils.build();
       });
+
+    function extractPinId(url) {
+      const match = url.match(/pin\/(\d+)/);
+      return match ? match[1] : "";
+    }
+
+    function deletePin(link) {
+      if (!confirm("তুমি কি এই পিনটি মুছে ফেলতে চাও?")) return;
+      fetch(sheetURL, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ link: link })
+      })
+      .then(res => res.text())
+      .then(msg => {
+        alert("✅ Successfully deleted!");
+        location.reload();
+      });
+    }
   </script>
+
 </body>
 </html>
