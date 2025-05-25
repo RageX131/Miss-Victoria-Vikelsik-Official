@@ -17,8 +17,10 @@ async function submitPin() {
     });
     const result = await response.text();
     document.getElementById("status").innerText = result;
+    document.getElementById("pinUrl").value = "";
     loadPins();
   } catch (error) {
+    console.error(error);
     document.getElementById("status").innerText = "Error submitting pin.";
   }
 }
@@ -41,6 +43,7 @@ async function loadPins() {
       preview.appendChild(div);
     });
   } catch (error) {
+    console.error(error);
     preview.innerHTML = "Failed to load pins.";
   }
 }
@@ -58,6 +61,7 @@ async function deletePin(url) {
     });
     loadPins();
   } catch (error) {
+    console.error(error);
     alert("Failed to delete pin.");
   }
 }

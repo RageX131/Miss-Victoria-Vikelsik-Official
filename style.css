@@ -1,66 +1,59 @@
 body {
-  font-family: sans-serif;
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: #fdfdfd;
+  background: #f9f9f9;
+  color: #333;
 }
+
 header {
-  text-align: center;
-  background: #f7f7f7;
-  padding: 10px;
-}
-header img.banner {
-  width: 100%;
-  max-height: 200px;
-  object-fit: cover;
-}
-main {
+  background: #e60023;
+  color: white;
   padding: 20px;
-}
-.form-section {
   text-align: center;
-  margin-bottom: 20px;
 }
-.form-section input {
-  width: 80%;
-  max-width: 400px;
+
+.banner {
+  max-width: 100%;
+  height: auto;
+}
+
+.form-section {
+  padding: 20px;
+  text-align: center;
+}
+
+input[type="text"] {
+  width: 60%;
   padding: 10px;
-  margin: 10px 0;
+  margin-right: 10px;
 }
-.form-section button {
+
+button {
   padding: 10px 20px;
+  background: #e60023;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
+
 #pin-preview {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
   justify-content: center;
+  gap: 20px;
+  padding: 20px;
 }
+
 .pin-preview {
-  border: 1px solid #ddd;
-  padding: 5px;
   background: white;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
-.pin-preview iframe {
-  width: 100px;
-  height: 180px;
+
+iframe {
+  width: 236px;
+  height: 350px;
 }
-.pin-preview button {
-  display: block;
-  margin-top: 5px;
-  width: 100%;
-  background: #f33;
-  color: white;
-  border: none;
-  padding: 5px;
-  cursor: pointer;
-}
-@media (max-width: 600px) {
-  .form-section input {
-    width: 95%;
-  }
-  .pin-preview iframe {
-    width: 80px;
-    height: 150px;
-  }
-}
+
