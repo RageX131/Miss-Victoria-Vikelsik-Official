@@ -1,20 +1,53 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pinterest Gallery</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pinterest Pins Gallery</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 2rem auto; }
+    .pin-container { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .pin { width: 236px; height: 280px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    iframe { width: 100%; height: 100%; border: none; }
+  </style>
 </head>
 <body>
-  <header>
-    <img src="images/banner.jpg" alt="Banner" class="header-image"/>
-    <h1>Miss Victoria Vikelsik's Pins</h1>
-  </header>
-  <main id="gallery">
-    <p>Loading pins...</p>
-  </main>
-  <script src="gallery.js"></script>
+
+  <h1>Submitted Pinterest Pins Gallery</h1>
+  <div id="pins" class="pin-container">Loading pins...</div>
+
+  <script>
+    const sheetAPI = "https://script.google.com/macros/s/AKfycbynr51kuGadseXTkt6Srrr4bYekErgbYN70lHGHYIGDm7s2-C2y_ktmn-Nrve7_VKAc/exec";
+
+    async function loadPins() {
+      const container = document.getElementById("pins");
+      container.textContent = "Loading pins...";
+
+      try {
+        const response = await fetch(sheetAPI);
+        const pins = await response.json();
+
+        if (!pins.length) {
+          container.textContent = "No pins submitted yet.";
+          return;
+        }
+
+        container.innerHTML = "";
+        pins.reverse().forEach(pin => {
+          const pinId = pin.url.split("/pin/")[1].split("/")[0];
+          const pinDiv = document.createElement("div");
+          pinDiv.className = "pin";
+          pinDiv.innerHTML = `<iframe src="https://assets.pinterest.com/ext/embed.html?id=${pinId}" allowfullscreen></iframe>`;
+          container.appendChild(pinDiv);
+        });
+
+      } catch (err) {
+        container.textContent = "Failed to load pins.";
+      }
+    }
+
+    window.onload = loadPins;
+  </script>
+
 </body>
 </html>
