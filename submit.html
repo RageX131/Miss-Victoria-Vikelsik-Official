@@ -1,53 +1,26 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Submit Pinterest Link</title>
   <meta charset="UTF-8" />
-  <style>
-    body {
-      font-family: Arial;
-      max-width: 500px;
-      margin: 50px auto;
-      text-align: center;
-    }
-    input {
-      width: 90%;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-    button {
-      padding: 10px 20px;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Submit Pinterest Link</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h2>📌 Submit a Pinterest Pin</h2>
-  <input type="text" id="pinLink" placeholder="Paste Pinterest link here" />
-  <br />
-  <button onclick="submitLink()">Submit</button>
-  <p id="message"></p>
-
-  <script>
-    function submitLink() {
-      const link = document.getElementById("pinLink").value;
-      if (!link.includes("pinterest.com/pin/")) {
-        document.getElementById("message").innerText = "❌ Invalid Pinterest link.";
-        return;
-      }
-
-      fetch("https://script.google.com/macros/s/AKfycbxR8e3LRNeh6RciYlwqCfAcK-DFdiMHHknR8kKN7EpTeMvTvOPmTix4Bxyk88WPjcvG/exec", {
-        method: "POST",
-        body: new URLSearchParams({ link })
-      })
-      .then(res => res.text())
-      .then(msg => {
-        document.getElementById("message").innerText = "✅ Submitted successfully!";
-        document.getElementById("pinLink").value = "";
-      })
-      .catch(err => {
-        document.getElementById("message").innerText = "⚠️ Failed to submit. Try again.";
-      });
-    }
-  </script>
+  <header>
+    <h1>Submit a Pinterest Pin</h1>
+  </header>
+  <main>
+    <form id="pinForm">
+      <input type="url" id="pinUrl" placeholder="Enter Pinterest Pin URL" required />
+      <button type="submit">Submit</button>
+    </form>
+    <section id="pinPreviewContainer">
+      <h2>Existing Pins</h2>
+      <div id="pinPreviews">Loading...</div>
+    </section>
+  </main>
+  <script src="submit.js"></script>
 </body>
 </html>

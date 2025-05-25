@@ -1,60 +1,20 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Miss Vikelsik Gallery</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pinterest Gallery</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-gray-100">
-
-  <!-- Header Image -->
+<body>
   <header>
-    <img src="images/SaveTwitter.Net_GqxYOslW4AA4hhp.jpg" alt="Miss Vikelsik" class="w-full max-h-80 object-cover" />
+    <img src="images/banner.jpg" alt="Banner" class="header-image"/>
+    <h1>Miss Victoria Vikelsik's Pins</h1>
   </header>
-
-  <!-- Main Container -->
-  <main class="max-w-6xl mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-center text-pink-600 mb-6">Miss Vikelsik's Pinterest Gallery</h1>
-
-    <!-- Gallery -->
-    <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  <main id="gallery">
+    <p>Loading pins...</p>
   </main>
-
-  <script>
-    const sheetURL = 'https://script.google.com/macros/s/AKfycbxR8e3LRNeh6RciYlwqCfAcK-DFdiMHHknR8kKN7EpTeMvTvOPmTix4Bxyk88WPjcvG/exec';
-    const gallery = document.getElementById("gallery");
-
-    fetch(sheetURL)
-      .then(res => res.json())
-      .then(data => {
-        data.reverse().forEach((item, index) => {
-          const wrapper = document.createElement("div");
-          wrapper.className = "bg-white p-2 rounded shadow relative";
-
-          wrapper.innerHTML = `
-            <iframe src="${item.link}/embed" height="400" width="100%" frameborder="0" scrolling="no" style="border:none;" class="w-full mb-2 rounded"></iframe>
-
-            <button onclick="deletePin('${item.link}')" class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-sm shadow hover:bg-red-600">Delete</button>
-          `;
-
-          gallery.appendChild(wrapper);
-        });
-      });
-
-    function deletePin(link) {
-      if (!confirm("এই পিনটি মুছে ফেলতে চাও?")) return;
-      fetch(sheetURL, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ link })
-      })
-      .then(res => res.text())
-      .then(response => {
-        alert("✅ Deleted!");
-        location.reload();
-      });
-    }
-  </script>
+  <script src="gallery.js"></script>
 </body>
 </html>
