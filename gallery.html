@@ -6,68 +6,55 @@
   <title>Miss Vikelsik Gallery</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-100">
 
   <!-- Header Image -->
-  <header class="w-full">
-    <img src="images/SaveTwitter.Net_GqxYOslW4AA4hhp.jpg" alt="Miss Vikelsik" class="w-full object-cover max-h-80" />
+  <header>
+    <img src="images/SaveTwitter.Net_GqxYOslW4AA4hhp.jpg" alt="Miss Vikelsik" class="w-full max-h-80 object-cover" />
   </header>
 
-  <!-- Main Content -->
+  <!-- Main Container -->
   <main class="max-w-6xl mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6 text-center text-pink-600">Miss Vikelsik's Pinterest Gallery</h1>
+    <h1 class="text-3xl font-bold text-center text-pink-600 mb-6">Miss Vikelsik's Pinterest Gallery</h1>
 
-    <!-- Gallery Container -->
-    <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Pins will be inserted here -->
-    </div>
+    <!-- Gallery -->
+    <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
   </main>
 
   <script>
-    const gallery = document.getElementById("gallery");
     const sheetURL = 'https://script.google.com/macros/s/AKfycbxR8e3LRNeh6RciYlwqCfAcK-DFdiMHHknR8kKN7EpTeMvTvOPmTix4Bxyk88WPjcvG/exec';
+    const gallery = document.getElementById("gallery");
 
     fetch(sheetURL)
       .then(res => res.json())
       .then(data => {
         data.reverse().forEach((item, index) => {
-          const pinWrapper = document.createElement("div");
-          pinWrapper.className = "relative shadow-md rounded-lg overflow-hidden bg-white";
+          const wrapper = document.createElement("div");
+          wrapper.className = "bg-white p-2 rounded shadow relative";
 
-          pinWrapper.innerHTML = `
-            <iframe src="https://www.pinterest.com/pin/${extractPinId(item.link)}/embed" 
-                    height="400" width="100%" frameborder="0" scrolling="no" 
-                    style="border:none;" class="w-full"></iframe>
+          wrapper.innerHTML = `
+            <iframe src="${item.link}/embed" height="400" width="100%" frameborder="0" scrolling="no" style="border:none;" class="w-full mb-2 rounded"></iframe>
 
-            <button onclick="deletePin('${item.link}')" 
-                    class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white px-3 py-1 text-xs rounded shadow">
-              Delete
-            </button>
+            <button onclick="deletePin('${item.link}')" class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-sm shadow hover:bg-red-600">Delete</button>
           `;
 
-          gallery.appendChild(pinWrapper);
+          gallery.appendChild(wrapper);
         });
       });
 
-    function extractPinId(url) {
-      const match = url.match(/pin\/(\d+)/);
-      return match ? match[1] : "";
-    }
-
     function deletePin(link) {
-      if (!confirm("তুমি কি এই পিনটি মুছে ফেলতে চাও?")) return;
+      if (!confirm("এই পিনটি মুছে ফেলতে চাও?")) return;
       fetch(sheetURL, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ link: link })
+        body: JSON.stringify({ link })
       })
       .then(res => res.text())
-      .then(msg => {
-        alert("✅ Successfully deleted!");
+      .then(response => {
+        alert("✅ Deleted!");
         location.reload();
       });
     }
   </script>
-
 </body>
 </html>
